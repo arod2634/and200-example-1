@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:weightSum="1">
+
+
+    <TextView
+        android:id="@+id/surveyLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/surveyTitleLabel"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/surveyLabel"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/nameLabel" />
+
+    <EditText
+        android:id="@+id/editName"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/surveyLabel"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_toRightOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/marriageStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/marriageStatusLabel" />
+
+    <ToggleButton
+        android:id="@+id/marriageStatusToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_toRightOf="@+id/marriageStatus"
+        android:onClick="toggleMarriageStatus"
+        android:textOff="Single"
+        android:textOn="Married" />
+
+    <TextView
+        android:id="@+id/spouseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/marriageStatus"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/spouseName"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/editSpouseName"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/marriageStatusToggle"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_toRightOf="@+id/spouseName"
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/childrenCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/spouseName"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:onClick="checkedChildren"
+        android:text="@string/haveChildren" />
+
+    <TextView
+        android:id="@+id/howManyChildren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/childrenCheckBox"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:text="@string/howManyChildrenLabel"
+        android:visibility="gone" />
+
+    <RadioGroup
+        android:id="@+id/numberOfChildren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/howManyChildren"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/radio_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="radioClicked"
+            android:text="@string/one" />
+
+        <RadioButton
+            android:id="@+id/radio_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="radioClicked"
+            android:text="@string/two" />
+
+        <RadioButton
+            android:id="@+id/radio_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="radioClicked"
+            android:text="@string/three" />
+
+        <RadioButton
+            android:id="@+id/radio_four"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="radioClicked"
+            android:text="@string/moreThenThree" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/summarize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/numberOfChildren"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:onClick="summarizeInfo"
+        android:text="@string/summerizeButton" />
+
+    <TextView
+        android:id="@+id/output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/summarize"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/summary" />
+
+</RelativeLayout>

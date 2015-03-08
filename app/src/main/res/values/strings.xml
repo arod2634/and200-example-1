@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My Survey Application</string>
+    <string name="surveyTitleLabel">Survey</string>
+    <string name="nameLabel">Name:</string>
+    <string name="marriageStatusLabel">Marriage Status:</string>
+    <string name="howManyChildrenLabel">How many:</string>
+    <string name="haveChildren">Have Children</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="moreThenThree">3 or More</string>
+    <string name="summerizeButton">Summerize</string>
+    <string name="action_settings">settings</string>
+    <string name="spouseName">Spouse Name:</string>
+    <string name="summary">Summary...</string>
+</resources>

@@ -3,12 +3,16 @@ package com.example1.arod.android200example1;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class SurveyActivity extends Activity {
@@ -21,7 +25,6 @@ public class SurveyActivity extends Activity {
     EditText spouseName;
     TextView numberOfKidsLabel;
     RadioGroup numberOfKids;
-    TextView output;
     String numberOfChildren;
     String summary;
 
@@ -41,8 +44,6 @@ public class SurveyActivity extends Activity {
         hasKids = (CheckBox) findViewById(R.id.childrenCheckBox);
         numberOfKidsLabel = (TextView) findViewById(R.id.howManyChildren);
         numberOfKids = (RadioGroup) findViewById(R.id.numberOfChildren);
-
-        output = (TextView) findViewById(R.id.output);
 
     }
 
@@ -109,15 +110,15 @@ public class SurveyActivity extends Activity {
         // Validate user input and display error messages to use via Toast
         if (name.getText().toString().matches("")) {
 
-            output.setText("Name can not be empty");
+            Toast.makeText(getApplicationContext(), "Name can not be empty", Toast.LENGTH_SHORT).show();
 
         } else if (isMarried.isChecked() && spouseName.getText().toString().matches("")) {
 
-            output.setText("Spouse name can not be empty");
+            Toast.makeText(getApplicationContext(), "Spouse name can not be empty", Toast.LENGTH_SHORT).show();
 
         } else if (hasKids.isChecked() && numberOfChildren == null) {
 
-            output.setText("Please specify how many children you have");
+            Toast.makeText(getApplicationContext(), "Please specify how many children you have", Toast.LENGTH_SHORT).show();
 
         } else {
 
@@ -169,9 +170,27 @@ public class SurveyActivity extends Activity {
 
             }
 
-            output.setText(summary);
+            showCustomToast();
 
         }
+
+    }
+
+    private void showCustomToast() {
+
+        // Create and display custom toast
+        LayoutInflater inflater = getLayoutInflater();
+
+        View layout = inflater.inflate(R.layout.toast_layout, (ViewGroup) findViewById(R.id.toast_layout_root));
+
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        text.setText(summary);
+
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
 
     }
 

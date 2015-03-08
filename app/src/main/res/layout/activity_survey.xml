@@ -137,12 +137,4 @@
         android:onClick="summarizeInfo"
         android:text="@string/summerizeButton" />
 
-    <TextView
-        android:id="@+id/output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/summarize"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/summary" />
-
 </RelativeLayout>

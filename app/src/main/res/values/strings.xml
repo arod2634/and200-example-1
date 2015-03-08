@@ -4,7 +4,7 @@
     <string name="nameLabel">Name:</string>
     <string name="marriageStatusLabel">Marriage Status:</string>
     <string name="howManyChildrenLabel">How many:</string>
-    <string name="haveChildren">Have Children</string>
+    <string name="haveChildren">Have Children?</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="three">3</string>
@@ -13,4 +13,6 @@
     <string name="action_settings">settings</string>
     <string name="spouseName">Spouse Name:</string>
     <string name="summary">Summary...</string>
+    <string name="pets">Have Pets?</string>
+    <string name="petLabel">Type of Pet(s):</string>
 </resources>

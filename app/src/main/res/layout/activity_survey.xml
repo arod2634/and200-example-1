@@ -128,11 +128,41 @@
 
     </RadioGroup>
 
+    <CheckBox
+        android:id="@+id/pets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/numberOfChildren"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:onClick="checkedHasPets"
+        android:text="@string/pets" />
+
+    <TextView
+        android:id="@+id/petLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pets"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/petLabel"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/petType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pets"
+        android:layout_toRightOf="@id/petLabel"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:textStyle="italic"
+        android:visibility="gone" />
+
+
     <Button
         android:id="@+id/summarize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/numberOfChildren"
+        android:layout_below="@+id/petLabel"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:onClick="summarizeInfo"
         android:text="@string/summerizeButton" />

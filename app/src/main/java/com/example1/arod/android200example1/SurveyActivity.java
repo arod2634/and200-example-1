@@ -3,6 +3,7 @@ package com.example1.arod.android200example1;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -55,6 +56,17 @@ public class SurveyActivity extends Activity {
         hasPets = (CheckBox) findViewById(R.id.pets);
         petType = (TextView) findViewById(R.id.petType);
         petLabel = (TextView) findViewById(R.id.petLabel);
+
+        SharedPreferences savedAppData = getSharedPreferences("App Data", MODE_PRIVATE);
+
+        //editPreferences.putString("numberOfKids", String.valueOf(numberOfChildren));
+
+        name.setText(savedAppData.getString("name", ""));
+        isMarried.setChecked(savedAppData.getBoolean("isMarried",false));
+        spouseName.setText(savedAppData.getString("spouseName", ""));
+        hasKids.setChecked(savedAppData.getBoolean("hasKids",false));
+        hasPets.setChecked(savedAppData.getBoolean("hasPets", false));
+        petType.setText(savedAppData.getString("typeOfPets", ""));
 
         showWelcomeDialog();
 
@@ -185,10 +197,30 @@ public class SurveyActivity extends Activity {
             public void onClick(DialogInterface dialog, int whichButtonClicked) {
 
                 // If the user selects "Yes" or "Maybe", show a custom toast
-                if ((whichButtonClicked == AlertDialog.BUTTON_POSITIVE) || (whichButtonClicked == AlertDialog.BUTTON_NEUTRAL))
+                if ((whichButtonClicked == AlertDialog.BUTTON_POSITIVE) || (whichButtonClicked == AlertDialog.BUTTON_NEUTRAL)) {
                     showCustomToast();
+                    saveUserData();
+                }
 
             }
+
+            private void saveUserData() {
+
+                SharedPreferences sp = getSharedPreferences("App Data", MODE_PRIVATE);
+                SharedPreferences.Editor editPreferences = sp.edit();
+
+                editPreferences.putString("name", String.valueOf(name.getText()));
+                editPreferences.putBoolean("isMarried", isMarried.isChecked());
+                editPreferences.putString("spouseName", String.valueOf(spouseName.getText()));
+                editPreferences.putBoolean("hasKids", hasKids.isChecked());
+                editPreferences.putString("numberOfKids", String.valueOf(numberOfChildren));
+                editPreferences.putBoolean("hasPets", hasPets.isChecked());
+                editPreferences.putString("typeOfPets", String.valueOf(petType.getText()));
+
+                editPreferences.apply();
+
+            }
+
         };
 
         // Attach custom listener to alert dialog clicks

@@ -33,6 +33,8 @@ public class SurveyActivity extends Activity {
     EditText spouseName;
     TextView numberOfKidsLabel;
     RadioGroup numberOfKids;
+    TextView previousSurveyResultsLabel;
+    TextView previousSurveyResults;
     String numberOfChildren;
     String summary;
 
@@ -41,6 +43,14 @@ public class SurveyActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey);
+
+        loadViewObjects();
+        loadPreviousUserData();
+        showWelcomeDialog();
+
+    }
+
+    private void loadViewObjects() {
 
         // Once the view in rendered, create instances of all the view objects that will we interacted with
         name = (EditText) findViewById(R.id.editName);
@@ -57,18 +67,35 @@ public class SurveyActivity extends Activity {
         petType = (TextView) findViewById(R.id.petType);
         petLabel = (TextView) findViewById(R.id.petLabel);
 
+        previousSurveyResultsLabel = (TextView) findViewById(R.id.previousResultsLabel);
+        previousSurveyResults = (TextView) findViewById(R.id.previousSurveyResults);
+
+    }
+
+    private void loadPreviousUserData() {
+
         SharedPreferences savedAppData = getSharedPreferences("App Data", MODE_PRIVATE);
 
-        //editPreferences.putString("numberOfKids", String.valueOf(numberOfChildren));
+        previousSurveyResults.setText(savedAppData.getString("summary", ""));
 
-        name.setText(savedAppData.getString("name", ""));
-        isMarried.setChecked(savedAppData.getBoolean("isMarried",false));
-        spouseName.setText(savedAppData.getString("spouseName", ""));
-        hasKids.setChecked(savedAppData.getBoolean("hasKids",false));
-        hasPets.setChecked(savedAppData.getBoolean("hasPets", false));
-        petType.setText(savedAppData.getString("typeOfPets", ""));
+        if (!previousSurveyResults.getText().equals("")) {
+            previousSurveyResults.setVisibility(View.VISIBLE);
+            previousSurveyResultsLabel.setVisibility(View.VISIBLE);
+        } else {
+            previousSurveyResults.setVisibility(View.GONE);
+            previousSurveyResultsLabel.setVisibility(View.GONE);
+        }
 
-        showWelcomeDialog();
+    }
+
+    private void showWelcomeDialog() {
+
+        AlertDialog.Builder welcomeMessage  = new AlertDialog.Builder(this);
+        welcomeMessage.setTitle("Welcome!");
+        welcomeMessage.setMessage("Please tell me about yourself");
+
+        AlertDialog dlg = welcomeMessage.create();
+        dlg.show();
 
     }
 
@@ -209,15 +236,11 @@ public class SurveyActivity extends Activity {
                 SharedPreferences sp = getSharedPreferences("App Data", MODE_PRIVATE);
                 SharedPreferences.Editor editPreferences = sp.edit();
 
-                editPreferences.putString("name", String.valueOf(name.getText()));
-                editPreferences.putBoolean("isMarried", isMarried.isChecked());
-                editPreferences.putString("spouseName", String.valueOf(spouseName.getText()));
-                editPreferences.putBoolean("hasKids", hasKids.isChecked());
-                editPreferences.putString("numberOfKids", String.valueOf(numberOfChildren));
-                editPreferences.putBoolean("hasPets", hasPets.isChecked());
-                editPreferences.putString("typeOfPets", String.valueOf(petType.getText()));
+                editPreferences.putString("summary", summary);
 
                 editPreferences.apply();
+                clearFields();
+                loadPreviousUserData();
 
             }
 
@@ -231,6 +254,24 @@ public class SurveyActivity extends Activity {
         // Create and show custom dialog
         AlertDialog customDialog = areYouSureConfirmation.create();
         customDialog.show();
+
+    }
+
+    private void clearFields() {
+
+        name.setText("");
+        isMarried.setChecked(false);
+        spouseName.setText("");
+        hasKids.setChecked(false);
+        numberOfKids.clearCheck();
+        hasPets.setChecked(false);
+        petType.setText("");
+        spouseLabel.setVisibility(View.GONE);
+        spouseName.setVisibility(View.GONE);
+        numberOfKids.setVisibility(View.GONE);
+        numberOfKidsLabel.setVisibility(View.GONE);
+        petLabel.setVisibility(View.GONE);
+        petType.setVisibility(View.GONE);
 
     }
 
@@ -249,17 +290,6 @@ public class SurveyActivity extends Activity {
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
         toast.show();
-
-    }
-
-    private void showWelcomeDialog() {
-
-        AlertDialog.Builder welcomeMessage  = new AlertDialog.Builder(this);
-        welcomeMessage.setTitle("Welcome!");
-        welcomeMessage.setMessage("Please tell me about yourself");
-
-        AlertDialog dlg = welcomeMessage.create();
-        dlg.show();
 
     }
 

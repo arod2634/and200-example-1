@@ -18,6 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class SurveyActivity extends Activity {
@@ -46,6 +50,7 @@ public class SurveyActivity extends Activity {
 
         loadViewObjects();
         loadPreviousUserData();
+        prefillForm();
         showWelcomeDialog();
 
     }
@@ -74,6 +79,7 @@ public class SurveyActivity extends Activity {
 
     private void loadPreviousUserData() {
 
+        // Load summary data from previous user from Shared Preferences
         SharedPreferences savedAppData = getSharedPreferences("App Data", MODE_PRIVATE);
 
         previousSurveyResults.setText(savedAppData.getString("summary", ""));
@@ -84,6 +90,62 @@ public class SurveyActivity extends Activity {
         } else {
             previousSurveyResults.setVisibility(View.GONE);
             previousSurveyResultsLabel.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void prefillForm() {
+
+        // Prefill form with previous users data saved to a serialized file
+        User user = new User();
+
+        try {
+            FileInputStream fis = openFileInput("User.bin");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            user = (User)ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        name.setText(user.getName());
+
+        if (!user.getPetType().equals("")) {
+            hasPets.setChecked(true);
+            petType.setText(user.getPetType());
+            petLabel.setVisibility(View.VISIBLE);
+            petType.setVisibility(View.VISIBLE);
+        }
+
+        if (!user.getSpouseName().equals("")) {
+            isMarried.setChecked(true);
+            spouseName.setText(user.getSpouseName());
+            spouseLabel.setVisibility(View.VISIBLE);
+            spouseName.setVisibility(View.VISIBLE);
+        }
+
+        if (!(user.getNumberOfKids() == null)) {
+            numberOfChildren = user.getNumberOfKids();
+            hasKids.setChecked(true);
+            numberOfKidsLabel.setVisibility(View.VISIBLE);
+            numberOfKids.setVisibility(View.VISIBLE);
+            switch (user.getNumberOfKids()) {
+                case "one":
+                    numberOfKids.check(R.id.radio_one);
+                    break;
+                case "two":
+                    numberOfKids.check(R.id.radio_two);
+                    break;
+                case "three":
+                    numberOfKids.check(R.id.radio_three);
+                    break;
+                case "three or more":
+                    numberOfKids.check(R.id.radio_four);
+                    break;
+                default:
+                    numberOfKids.clearCheck();
+            }
         }
 
     }
@@ -108,6 +170,7 @@ public class SurveyActivity extends Activity {
         } else {
             spouseLabel.setVisibility(View.GONE);
             spouseName.setVisibility(View.GONE);
+            spouseName.setText("");
         }
 
     }
@@ -121,6 +184,7 @@ public class SurveyActivity extends Activity {
         } else {
             numberOfKidsLabel.setVisibility(View.GONE);
             numberOfKids.setVisibility(View.GONE);
+            numberOfKids.clearCheck();
         }
 
     }
@@ -149,6 +213,61 @@ public class SurveyActivity extends Activity {
                     numberOfChildren = "three or more";
                 break;
         }
+    }
+
+    public void checkedHasPets(View view) {
+
+        // Show custom pets dialog
+        if (hasPets.isChecked()) {
+
+            final String[] pets = { "Cat", "Dog", "Rabbit", "Turtle", "Fish", "Other..." };
+            final ArrayList<String> selectedPets = new ArrayList<>(6);
+
+            AlertDialog.Builder choosePet = new AlertDialog.Builder(this);
+            choosePet.setTitle("What kind of pets do you have?");
+
+            DialogInterface.OnMultiChoiceClickListener clickedMultiChoiceOption = new DialogInterface.OnMultiChoiceClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+                    if (isChecked)
+                        selectedPets.add(pets[which]);
+                    else
+                        selectedPets.remove(pets[which]);
+
+                }
+            };
+
+            DialogInterface.OnClickListener clickedDialogButton = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == AlertDialog.BUTTON_POSITIVE) {
+                        petType.setText(String.valueOf(selectedPets).subSequence(1, String.valueOf(selectedPets).length()-1));
+                        petLabel.setVisibility(View.VISIBLE);
+                        petType.setVisibility(View.VISIBLE);
+                    } else {
+                        hasPets.setChecked(false);
+                        petType.setText("");
+                    }
+
+                }
+            };
+
+            choosePet.setMultiChoiceItems(pets, null, clickedMultiChoiceOption);
+
+            choosePet.setPositiveButton("OK", clickedDialogButton);
+            choosePet.setNegativeButton("Cancel", clickedDialogButton);
+
+            AlertDialog dlg = choosePet.create();
+            dlg.show();
+
+        } else {
+            petLabel.setVisibility(View.GONE);
+            petType.setVisibility(View.GONE);
+            petType.setText("");
+        }
+
     }
 
     public void summarizeInfo(View view) {
@@ -233,12 +352,31 @@ public class SurveyActivity extends Activity {
 
             private void saveUserData() {
 
+                // Save summary to user prefs
                 SharedPreferences sp = getSharedPreferences("App Data", MODE_PRIVATE);
                 SharedPreferences.Editor editPreferences = sp.edit();
 
                 editPreferences.putString("summary", summary);
 
                 editPreferences.apply();
+
+                // Save user model to serialized file
+                User user = new User();
+                user.setName(String.valueOf(name.getText()));
+                user.setPetType(String.valueOf(petType.getText()));
+                user.setSpouseName(String.valueOf(spouseName.getText()));
+                user.setNumberOfKids(numberOfChildren);
+
+                try {
+                    FileOutputStream fos = openFileOutput("User.bin", MODE_PRIVATE);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(user);
+                    oos.close();
+                    fos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 clearFields();
                 loadPreviousUserData();
 
@@ -254,24 +392,6 @@ public class SurveyActivity extends Activity {
         // Create and show custom dialog
         AlertDialog customDialog = areYouSureConfirmation.create();
         customDialog.show();
-
-    }
-
-    private void clearFields() {
-
-        name.setText("");
-        isMarried.setChecked(false);
-        spouseName.setText("");
-        hasKids.setChecked(false);
-        numberOfKids.clearCheck();
-        hasPets.setChecked(false);
-        petType.setText("");
-        spouseLabel.setVisibility(View.GONE);
-        spouseName.setVisibility(View.GONE);
-        numberOfKids.setVisibility(View.GONE);
-        numberOfKidsLabel.setVisibility(View.GONE);
-        petLabel.setVisibility(View.GONE);
-        petType.setVisibility(View.GONE);
 
     }
 
@@ -293,57 +413,23 @@ public class SurveyActivity extends Activity {
 
     }
 
-    public void checkedHasPets(View view) {
+    private void clearFields() {
 
-        // Show custom pets dialog
-        if (hasPets.isChecked()) {
-
-            final String[] pets = { "Cat", "Dog", "Rabbit", "Turtle", "Fish", "Other..." };
-            final ArrayList<String> selectedPets = new ArrayList<>(6);
-
-            AlertDialog.Builder choosePet = new AlertDialog.Builder(this);
-            choosePet.setTitle("What kind of pets do you have?");
-
-            DialogInterface.OnMultiChoiceClickListener clickedMultiChoiceOption = new DialogInterface.OnMultiChoiceClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-
-
-                    if (isChecked)
-                        selectedPets.add(pets[which]);
-                    else
-                        selectedPets.remove(pets[which]);
-
-                    Log.i("Output", String.valueOf(selectedPets));
-                }
-            };
-
-            DialogInterface.OnClickListener clickedDialogButton = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (which == AlertDialog.BUTTON_POSITIVE) {
-                        petType.setText(String.valueOf(selectedPets).subSequence(1, String.valueOf(selectedPets).length()-1));
-                        petLabel.setVisibility(View.VISIBLE);
-                        petType.setVisibility(View.VISIBLE);
-                    } else
-                        hasPets.setChecked(false);
-
-                }
-            };
-
-            choosePet.setMultiChoiceItems(pets, null, clickedMultiChoiceOption);
-
-            choosePet.setPositiveButton("OK", clickedDialogButton);
-            choosePet.setNegativeButton("Cancel", clickedDialogButton);
-
-            AlertDialog dlg = choosePet.create();
-            dlg.show();
-
-        } else {
-            petLabel.setVisibility(View.GONE);
-            petType.setVisibility(View.GONE);
-        }
+        name.setText("");
+        isMarried.setChecked(false);
+        spouseName.setText("");
+        hasKids.setChecked(false);
+        numberOfKids.clearCheck();
+        numberOfChildren = "";
+        hasPets.setChecked(false);
+        petType.setText("");
+        spouseLabel.setVisibility(View.GONE);
+        spouseName.setVisibility(View.GONE);
+        numberOfKids.setVisibility(View.GONE);
+        numberOfKidsLabel.setVisibility(View.GONE);
+        petLabel.setVisibility(View.GONE);
+        petType.setVisibility(View.GONE);
 
     }
+
 }

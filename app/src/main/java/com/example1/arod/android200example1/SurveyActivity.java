@@ -365,13 +365,31 @@ public class SurveyActivity extends Activity {
 
     private void saveUserData() {
 
-        // Save users data into the applications shared preferences
+        // Save summary to user prefs
         SharedPreferences sp = getSharedPreferences("App Data", MODE_PRIVATE);
         SharedPreferences.Editor editPreferences = sp.edit();
 
         editPreferences.putString("summary", summary);
 
         editPreferences.apply();
+
+        // Save user model to serialized file
+        User user = new User();
+        user.setName(String.valueOf(name.getText()));
+        user.setPetType(String.valueOf(petType.getText()));
+        user.setSpouseName(String.valueOf(spouseName.getText()));
+        user.setNumberOfKids(numberOfChildren);
+
+        try {
+            FileOutputStream fos = openFileOutput("User.bin", MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(user);
+            oos.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         clearFields();
         loadPreviousUserData();
 

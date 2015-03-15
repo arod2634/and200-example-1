@@ -231,19 +231,6 @@ public class SurveyActivity extends Activity {
 
             }
 
-            private void saveUserData() {
-
-                SharedPreferences sp = getSharedPreferences("App Data", MODE_PRIVATE);
-                SharedPreferences.Editor editPreferences = sp.edit();
-
-                editPreferences.putString("summary", summary);
-
-                editPreferences.apply();
-                clearFields();
-                loadPreviousUserData();
-
-            }
-
         };
 
         // Attach custom listener to alert dialog clicks
@@ -254,6 +241,19 @@ public class SurveyActivity extends Activity {
         // Create and show custom dialog
         AlertDialog customDialog = areYouSureConfirmation.create();
         customDialog.show();
+
+    }
+
+    private void saveUserData() {
+
+        SharedPreferences sp = getSharedPreferences("App Data", MODE_PRIVATE);
+        SharedPreferences.Editor editPreferences = sp.edit();
+
+        editPreferences.putString("summary", summary);
+
+        editPreferences.apply();
+        clearFields();
+        loadPreviousUserData();
 
     }
 

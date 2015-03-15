@@ -74,6 +74,7 @@ public class SurveyActivity extends Activity {
 
     private void loadPreviousUserData() {
 
+        // Pull the previous users summary string from the applications shared preferences
         SharedPreferences savedAppData = getSharedPreferences("App Data", MODE_PRIVATE);
 
         previousSurveyResults.setText(savedAppData.getString("summary", ""));
@@ -246,6 +247,7 @@ public class SurveyActivity extends Activity {
 
     private void saveUserData() {
 
+        // Save users data into the applications shared preferences
         SharedPreferences sp = getSharedPreferences("App Data", MODE_PRIVATE);
         SharedPreferences.Editor editPreferences = sp.edit();
 

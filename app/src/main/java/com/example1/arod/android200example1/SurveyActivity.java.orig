@@ -79,7 +79,11 @@ public class SurveyActivity extends Activity {
 
     private void loadPreviousUserData() {
 
+<<<<<<< HEAD
+        // Load summary data from previous user from Shared Preferences
+=======
         // Pull the previous users summary string from the applications shared preferences
+>>>>>>> exercise-3
         SharedPreferences savedAppData = getSharedPreferences("App Data", MODE_PRIVATE);
 
         previousSurveyResults.setText(savedAppData.getString("summary", ""));
@@ -350,6 +354,41 @@ public class SurveyActivity extends Activity {
 
             }
 
+<<<<<<< HEAD
+            private void saveUserData() {
+
+                // Save summary to user prefs
+                SharedPreferences sp = getSharedPreferences("App Data", MODE_PRIVATE);
+                SharedPreferences.Editor editPreferences = sp.edit();
+
+                editPreferences.putString("summary", summary);
+
+                editPreferences.apply();
+
+                // Save user model to serialized file
+                User user = new User();
+                user.setName(String.valueOf(name.getText()));
+                user.setPetType(String.valueOf(petType.getText()));
+                user.setSpouseName(String.valueOf(spouseName.getText()));
+                user.setNumberOfKids(numberOfChildren);
+
+                try {
+                    FileOutputStream fos = openFileOutput("User.bin", MODE_PRIVATE);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(user);
+                    oos.close();
+                    fos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                clearFields();
+                loadPreviousUserData();
+
+            }
+
+=======
+>>>>>>> exercise-3
         };
 
         // Attach custom listener to alert dialog clicks
@@ -363,6 +402,8 @@ public class SurveyActivity extends Activity {
 
     }
 
+<<<<<<< HEAD
+=======
     private void saveUserData() {
 
         // Save users data into the applications shared preferences
@@ -395,6 +436,7 @@ public class SurveyActivity extends Activity {
 
     }
 
+>>>>>>> exercise-3
     private void showCustomToast() {
 
         // Create and display custom toast

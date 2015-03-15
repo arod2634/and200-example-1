@@ -377,24 +377,6 @@ public class SurveyActivity extends Activity {
 
     }
 
-    private void clearFields() {
-
-        name.setText("");
-        isMarried.setChecked(false);
-        spouseName.setText("");
-        hasKids.setChecked(false);
-        numberOfKids.clearCheck();
-        hasPets.setChecked(false);
-        petType.setText("");
-        spouseLabel.setVisibility(View.GONE);
-        spouseName.setVisibility(View.GONE);
-        numberOfKids.setVisibility(View.GONE);
-        numberOfKidsLabel.setVisibility(View.GONE);
-        petLabel.setVisibility(View.GONE);
-        petType.setVisibility(View.GONE);
-
-    }
-
     private void showCustomToast() {
 
         // Create and display custom toast

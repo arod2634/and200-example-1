@@ -3,13 +3,10 @@ package com.example1.arod.android200example1;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -42,6 +39,8 @@ public class SurveyActivity extends Activity {
     String numberOfChildren;
     String summary;
 
+    public final static String EXTRA_MESSAGE = "com.example1.arod..android200example1.MESSAGE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -49,7 +48,6 @@ public class SurveyActivity extends Activity {
         setContentView(R.layout.activity_survey);
 
         loadViewObjects();
-        loadPreviousUserData();
         prefillForm();
         showWelcomeDialog();
 
@@ -74,23 +72,6 @@ public class SurveyActivity extends Activity {
 
         previousSurveyResultsLabel = (TextView) findViewById(R.id.previousResultsLabel);
         previousSurveyResults = (TextView) findViewById(R.id.previousSurveyResults);
-
-    }
-
-    private void loadPreviousUserData() {
-
-        // Pull the previous users summary string from the applications shared preferences
-        SharedPreferences savedAppData = getSharedPreferences("App Data", MODE_PRIVATE);
-
-        previousSurveyResults.setText(savedAppData.getString("summary", ""));
-
-        if (!previousSurveyResults.getText().equals("")) {
-            previousSurveyResults.setVisibility(View.VISIBLE);
-            previousSurveyResultsLabel.setVisibility(View.VISIBLE);
-        } else {
-            previousSurveyResults.setVisibility(View.GONE);
-            previousSurveyResultsLabel.setVisibility(View.GONE);
-        }
 
     }
 
@@ -154,7 +135,17 @@ public class SurveyActivity extends Activity {
 
         AlertDialog.Builder welcomeMessage  = new AlertDialog.Builder(this);
         welcomeMessage.setTitle("Welcome!");
-        welcomeMessage.setMessage("Please tell me about yourself");
+
+        // Pull the previous users summary string from the applications shared preferences
+        SharedPreferences savedAppData = getSharedPreferences("App Data", MODE_PRIVATE);
+
+        String previousSurveryResults = savedAppData.getString("summary", "");
+
+        if (!previousSurveryResults.equals("")) {
+            welcomeMessage.setMessage("Previous Survey Results:\n\n" + previousSurveryResults);
+        } else {
+            welcomeMessage.setMessage("Please tell me about yourself");
+        }
 
         AlertDialog dlg = welcomeMessage.create();
         dlg.show();
@@ -344,8 +335,8 @@ public class SurveyActivity extends Activity {
 
                 // If the user selects "Yes" or "Maybe", show a custom toast
                 if ((whichButtonClicked == AlertDialog.BUTTON_POSITIVE) || (whichButtonClicked == AlertDialog.BUTTON_NEUTRAL)) {
-                    showCustomToast();
                     saveUserData();
+                    startIntentToResultsActivity();
                 }
 
             }
@@ -391,25 +382,15 @@ public class SurveyActivity extends Activity {
         }
 
         clearFields();
-        loadPreviousUserData();
 
     }
 
-    private void showCustomToast() {
+    private void startIntentToResultsActivity() {
 
-        // Create and display custom toast
-        LayoutInflater inflater = getLayoutInflater();
-
-        View layout = inflater.inflate(R.layout.toast_layout, (ViewGroup) findViewById(R.id.toast_layout_root));
-
-        TextView text = (TextView) layout.findViewById(R.id.text);
-        text.setText(summary);
-
-        Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layout);
-        toast.show();
+        // Setup intent and pass summary to new activity
+        Intent intent = new Intent(this, ResultsActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, summary);
+        startActivity(intent);
 
     }
 

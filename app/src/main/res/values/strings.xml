@@ -16,4 +16,5 @@
     <string name="pets">Have Pets?</string>
     <string name="petLabel">Type of Pet(s):</string>
     <string name="previousResults">Previous Survey Results:</string>
+    <string name="shareLabel">Share</string>
 </resources>

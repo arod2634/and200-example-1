@@ -2,9 +2,6 @@ package com.example1.arod.android200example1;
 
 import java.io.Serializable;
 
-/**
- * Created by arod on 3/10/15.
- */
 public class User implements Serializable {
 
     private String name;

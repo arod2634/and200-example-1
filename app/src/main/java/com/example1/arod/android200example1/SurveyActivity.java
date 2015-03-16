@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -39,7 +40,7 @@ public class SurveyActivity extends Activity {
     String numberOfChildren;
     String summary;
 
-    public final static String EXTRA_MESSAGE = "com.example1.arod..android200example1.MESSAGE";
+    public final static String EXTRA_MESSAGE = "com.example1.arod.android200example1.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,8 @@ public class SurveyActivity extends Activity {
             spouseName.setVisibility(View.VISIBLE);
         }
 
+        Log.i("Output", "user.getNumberOfKids() = " + user.getNumberOfKids());
+
         if (!(user.getNumberOfKids() == null)) {
             numberOfChildren = user.getNumberOfKids();
             hasKids.setChecked(true);
@@ -126,6 +129,9 @@ public class SurveyActivity extends Activity {
                     break;
                 default:
                     numberOfKids.clearCheck();
+                    hasKids.setChecked(false);
+                    numberOfKidsLabel.setVisibility(View.GONE);
+                    numberOfKids.setVisibility(View.GONE);
             }
         }
 
@@ -176,6 +182,7 @@ public class SurveyActivity extends Activity {
             numberOfKidsLabel.setVisibility(View.GONE);
             numberOfKids.setVisibility(View.GONE);
             numberOfKids.clearCheck();
+            numberOfChildren = "";
         }
 
     }
@@ -370,6 +377,8 @@ public class SurveyActivity extends Activity {
         user.setPetType(String.valueOf(petType.getText()));
         user.setSpouseName(String.valueOf(spouseName.getText()));
         user.setNumberOfKids(numberOfChildren);
+
+        Log.i("Output", "user.setNumberOfKids(numberOfChildren) = " + numberOfChildren);
 
         try {
             FileOutputStream fos = openFileOutput("User.bin", MODE_PRIVATE);

@@ -7,19 +7,37 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 
 public class ResultsActivity extends ActionBarActivity {
 
     String surveyResults;
     TextView output;
     ShareActionProvider shareSurveyResults;
+    ListView resultsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+
+        // Setup ShareActionProvider to use this class
+        shareSurveyResults = new ShareActionProvider(this);
+
+        setResultsLabel();
+        setResultsList();
+    }
+
+    private void setResultsLabel() {
 
         // Receive the incoming intent
         Intent intent = getIntent();
@@ -31,8 +49,42 @@ public class ResultsActivity extends ActionBarActivity {
         output = (TextView) findViewById(R.id.surveyResults);
         output.setText(surveyResults);
 
-        // Setup ShareActionProvider to use this class
-        shareSurveyResults = new ShareActionProvider(this);
+    }
+
+    private void setResultsList() {
+
+        resultsList = (ListView) findViewById(R.id.resultsList);
+
+        User user = new User();
+
+        try {
+            FileInputStream fis = openFileInput("User.bin");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            user = (User)ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final String[] results = { "Name: " + user.getName(),
+                             "Spouse Name: " + user.getSpouseName(),
+                             "Number of Children: " + user.getNumberOfKids(),
+                             "Pets: " + user.getPetType() };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        adapter.addAll(results);
+
+        resultsList.setAdapter(adapter);
+
+        resultsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                Toast.makeText(resultsList.getContext(), String.format("\"%s\" was tapped", results[arg2]), Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
     }
 
